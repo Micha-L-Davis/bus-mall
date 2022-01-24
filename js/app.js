@@ -93,7 +93,7 @@ function renderProducts(){
     product02 = Product.list[getRandomIndex(Product.list)];
   }
 
-  while ((product03 === product01) || (product03 === product01)){
+  while ((product03 === product01) || (product03 === product02)){
     product03 = Product.list[getRandomIndex(Product.list)];
   }
 
