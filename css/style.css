@@ -1,0 +1,47 @@
+body {
+    width: 960px;
+    margin: auto;
+    background-color: rgb(159, 176, 190);
+    color: rgb(27, 20, 20);
+}
+
+#question {
+    padding: 2%;
+    align-self: center;    
+    font-size: 24pt;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    text-align: center;
+    background-color: rgb(75, 55, 55);
+    color: aliceblue;
+}
+
+#products {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+#results {
+    background-color: rgb(75, 55, 55);
+    color: aliceblue;
+    padding: 2%;
+    padding-left: 4%;
+}
+
+#results p{
+    font-weight: bold;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    margin: 2%;
+}
+
+ul {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    list-style: circle;
+}
+
+img {
+    max-width: 280px;
+    max-height: 200px;
+}
+
