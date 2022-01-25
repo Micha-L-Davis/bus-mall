@@ -165,6 +165,7 @@ function renderChart(){
     type: 'bar',
     data: {
       labels: productNames,
+      fontColor: 'white',
       datasets: [{
         label: '# of Votes',
         data: productVotes,
@@ -213,9 +214,34 @@ function renderChart(){
       }]
     },
     options: {
+      plugins: {
+        legend: {
+          labels: {
+            color: 'white'
+          }
+        },
+      },
       scales: {
-        y: {
-          beginAtZero: true
+        yAxis: {
+          color: 'white',
+          beginAtZero: true,
+          ticks: {
+            color: 'white'
+          },
+          grid: {
+            borderColor: 'rgba(240, 248, 255, 0.5)',
+            tickColor: 'rgba(100, 125, 140, 0.5)'
+          }
+        },
+        xAxis: {
+          ticks: {
+            color: 'white'
+          },
+          color: 'white',
+          grid: {
+            borderColor: 'rgba(240, 248, 255, 0.5)',
+            tickColor: 'rgba(100, 125, 140, 0.5)'
+          }
         }
       }
     },
