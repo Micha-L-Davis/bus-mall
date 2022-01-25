@@ -110,7 +110,7 @@ function renderProducts(){
   product03.viewCount++;
 }
 
-let voteCount = 5;
+let voteCount = 25;
 
 function handleVote(event){
   event.preventDefault();
@@ -126,6 +126,7 @@ function handleVote(event){
   if(voteCount === 0) {
     productsSection.removeEventListener('click', handleVote);
     resultsSection.addEventListener('click', handleResults);
+    resultsSection.firstElementChild.textContent = 'Show Results';
   }
 
   renderProducts();
