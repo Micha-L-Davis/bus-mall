@@ -2,12 +2,11 @@
 
 //#region Global Document References
 
-let productsSection = document.getElementById('products');
-// let img01 = document.getElementById('img01');
-// let img02 = document.getElementById('img02');
-// let img03 = document.getElementById('img03');
+const productsSection = document.getElementById('products');
 
-let resultsSection= document.getElementById('results');
+const chartElem = document.getElementById('chart');
+let context = chartElem.getContext('2d');
+
 
 //#endregion
 
@@ -18,7 +17,7 @@ function Product(productID, alt, fileExtension = 'jpg') {
   this.src = `img/${productID}.${fileExtension}`;
   this.alt = alt;
   this.viewCount = 0;
-  this.selectCount = 0;
+  this.voteCount = 0;
 
   Product.list.push(this);
 }
@@ -70,8 +69,11 @@ let wineGlass = new Product('wine-glass', 'a zero-g wine glass');
 
 //#endregion
 
-let voteCount = 25;
+chartElem.style.display='none';
+let userVoteCount = 25;
 const numToRender = 3;
+let prevProducts = [];
+
 renderProducts(Product.list);
 
 //#region Global Functions
@@ -86,15 +88,21 @@ function getRandomIndex(arr){
   return Math.floor(Math.random() * arr.length);
 }
 
+
 function renderProducts(arr){
   removeAllChildren(productsSection);
-  let products = [...arr];
+  let currentProducts = [...arr];
+  let products;
+
+  products = currentProducts.filter(product => !prevProducts.includes(product));
+  prevProducts = [];
   for (let i = numToRender; i > 0; i--){
     let product = products.splice(getRandomIndex(products), 1)[0];
     let imgElem = createElement('img', productsSection);
     imgElem.src = product.src;
     imgElem.alt = product.alt;
     product.viewCount++;
+    prevProducts.push(product);
   }
 }
 
@@ -107,31 +115,139 @@ function removeAllChildren(parent) {
 function handleVote(event){
   event.preventDefault();
   let clicked = event.target;
-  for (let i = 0; i < Product.list.length; i++){
-    let product = Product.list[i];
-    if(clicked.alt === product.alt){
-      product.selectCount++;
-      voteCount--;
+
+  if (clicked.alt !== undefined){
+    for (let i = 0; i < Product.list.length; i++){
+      let product = Product.list[i];
+      if(clicked.alt === product.alt){
+        product.voteCount++;
+        userVoteCount--;
+      }
     }
+    renderProducts(Product.list);
   }
-
-  if(voteCount === 0) {
+  if(userVoteCount === 0) {
     productsSection.removeEventListener('click', handleVote);
-    resultsSection.addEventListener('click', handleResults);
-    resultsSection.firstElementChild.textContent = 'Show Results';
+    chartElem.style.display='initial';
+    renderResults();
   }
 
-  renderProducts(Product.list);
+
 }
 
-function handleResults(event){
-  event.preventDefault();
-  const ulElem = createElement('ul', resultsSection);
+function renderResults(){
+  fillFallbackData();
+  renderChart();
+}
+
+function fillFallbackData() {
+  const ulElem = createElement('ul', chartElem);
   for (let i = 0; i < Product.list.length; i++){
     let product = Product.list[i];
     const liElem = createElement('li', ulElem);
     liElem.textContent = `${product.alt} was chosen ${product.selectCount} times, and was seen ${product.viewCount} times.`;
   }
+}
+
+function renderChart(){
+  let productNames = [];
+  let productVotes = [];
+  let productViews = [];
+
+  for (let i = 0; i < Product.list.length; i++) {
+    let product = Product.list[i];
+    productNames.push(product.productID);
+    productVotes.push(product.voteCount);
+    productViews.push(product.viewCount);
+  }
+
+  let chartObj = {
+    type: 'bar',
+    data: {
+      labels: productNames,
+      fontColor: 'white',
+      datasets: [{
+        label: '# of Votes',
+        data: productVotes,
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(255, 205, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(201, 203, 207, 0.2)'
+        ],
+        borderColor: [
+          'rgb(255, 99, 132)',
+          'rgb(255, 159, 64)',
+          'rgb(255, 205, 86)',
+          'rgb(75, 192, 192)',
+          'rgb(54, 162, 235)',
+          'rgb(153, 102, 255)',
+          'rgb(201, 203, 207)'
+        ],
+        borderWidth: 1
+      },
+      {
+        label: '# of Views',
+        data: productViews,
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(255, 205, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(201, 203, 207, 0.2)'
+        ],
+        borderColor: [
+          'rgb(255, 99, 132)',
+          'rgb(255, 159, 64)',
+          'rgb(255, 205, 86)',
+          'rgb(75, 192, 192)',
+          'rgb(54, 162, 235)',
+          'rgb(153, 102, 255)',
+          'rgb(201, 203, 207)'
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      plugins: {
+        legend: {
+          labels: {
+            color: 'white'
+          }
+        },
+      },
+      scales: {
+        yAxis: {
+          color: 'white',
+          beginAtZero: true,
+          ticks: {
+            color: 'white'
+          },
+          grid: {
+            borderColor: 'rgba(240, 248, 255, 0.5)',
+            tickColor: 'rgba(100, 125, 140, 0.5)'
+          }
+        },
+        xAxis: {
+          ticks: {
+            color: 'white'
+          },
+          color: 'white',
+          grid: {
+            borderColor: 'rgba(240, 248, 255, 0.5)',
+            tickColor: 'rgba(100, 125, 140, 0.5)'
+          }
+        }
+      }
+    },
+  };
+
+  const chart = new Chart(context, chartObj); //eslint-disable-line
 }
 
 //#endregion
