@@ -3,9 +3,9 @@
 //#region Global Document References
 
 let productsSection = document.getElementById('products');
-let img01 = document.getElementById('img01');
-let img02 = document.getElementById('img02');
-let img03 = document.getElementById('img03');
+// let img01 = document.getElementById('img01');
+// let img02 = document.getElementById('img02');
+// let img03 = document.getElementById('img03');
 
 let resultsSection= document.getElementById('results');
 
@@ -70,7 +70,9 @@ let wineGlass = new Product('wine-glass', 'a zero-g wine glass');
 
 //#endregion
 
-renderProducts();
+let voteCount = 25;
+const numToRender = 3;
+renderProducts(Product.list);
 
 //#region Global Functions
 
@@ -84,33 +86,23 @@ function getRandomIndex(arr){
   return Math.floor(Math.random() * arr.length);
 }
 
-function renderProducts(){
-  let product01 = Product.list[getRandomIndex(Product.list)];
-  let product02 = Product.list[getRandomIndex(Product.list)];
-  let product03 = Product.list[getRandomIndex(Product.list)];
-
-  while (product02 === product01){
-    product02 = Product.list[getRandomIndex(Product.list)];
+function renderProducts(arr){
+  removeAllChildren(productsSection);
+  let products = [...arr];
+  for (let i = numToRender; i > 0; i--){
+    let product = products.splice(getRandomIndex(products), 1)[0];
+    let imgElem = createElement('img', productsSection);
+    imgElem.src = product.src;
+    imgElem.alt = product.alt;
+    product.viewCount++;
   }
-
-  while ((product03 === product01) || (product03 === product02)){
-    product03 = Product.list[getRandomIndex(Product.list)];
-  }
-
-  img01.src = product01.src;
-  img01.alt = product01.alt;
-  product01.viewCount++;
-
-  img02.src = product02.src;
-  img02.alt = product02.alt;
-  product02.viewCount++;
-
-  img03.src = product03.src;
-  img03.alt = product03.alt;
-  product03.viewCount++;
 }
 
-let voteCount = 25;
+function removeAllChildren(parent) {
+  while (parent.firstChild) {
+    parent.removeChild(parent.firstChild);
+  }
+}
 
 function handleVote(event){
   event.preventDefault();
@@ -129,7 +121,7 @@ function handleVote(event){
     resultsSection.firstElementChild.textContent = 'Show Results';
   }
 
-  renderProducts();
+  renderProducts(Product.list);
 }
 
 function handleResults(event){
@@ -141,7 +133,6 @@ function handleResults(event){
     liElem.textContent = `${product.alt} was chosen ${product.selectCount} times, and was seen ${product.viewCount} times.`;
   }
 }
-
 
 //#endregion
 
