@@ -26,57 +26,72 @@ Product.list = [];
 
 //#endregion
 
-//#region Constructor Calls
+//#region Function for Constructor Calls
 
-// eslint-disable-next-line no-unused-vars
-let bag = new Product('bag', 'a droid suitcase');
-// eslint-disable-next-line no-unused-vars
-let banana = new Product('banana', 'a banana slicer');
-// eslint-disable-next-line no-unused-vars
-let bathroom = new Product('bathroom', 'a toilet-side tablet');
-// eslint-disable-next-line no-unused-vars
-let boots = new Product('boots','a pair of toeless waders');
-// eslint-disable-next-line no-unused-vars
-let breakfast = new Product('breakfast', 'a kitchen multi-tool');
-// eslint-disable-next-line no-unused-vars
-let bubblegum = new Product('bubblegum', 'a pack of meatball bubblegum');
-// eslint-disable-next-line no-unused-vars
-let chair = new Product('chair', 'an uncomfortable chair');
-// eslint-disable-next-line no-unused-vars
-let cthulhu = new Product('cthulhu', 'a cthulhu action figure');
-// eslint-disable-next-line no-unused-vars
-let dogDuck = new Product('dog-duck', 'a duck-billed dog muzzle');
-// eslint-disable-next-line no-unused-vars
-let dragon = new Product('dragon', 'a tin of dragon meat');
-// eslint-disable-next-line no-unused-vars
-let pen = new Product('pen', 'a multifunction writing/eating set');
-// eslint-disable-next-line no-unused-vars
-let petSweep = new Product('pet-sweep', 'a pack of pet dusting boots');
-// eslint-disable-next-line no-unused-vars
-let scissors = new Product('scissors', 'a pair of pizza shears');
-// eslint-disable-next-line no-unused-vars
-let shark = new Product('shark', 'a shark sleeping bag');
-// eslint-disable-next-line no-unused-vars
-let sweep = new Product('sweep', 'a child labor device', 'png');
-// eslint-disable-next-line no-unused-vars
-let tauntaun = new Product('tauntaun', 'a moist, smelly sleeping bag');
-// eslint-disable-next-line no-unused-vars
-let unicorn = new Product('unicorn', 'a tin of unicorn meat');
-// eslint-disable-next-line no-unused-vars
-let waterCan = new Product('water-can', 'a self-watering can');
-// eslint-disable-next-line no-unused-vars
-let wineGlass = new Product('wine-glass', 'a zero-g wine glass');
-
+function constructProducts() {
+  Product.list = [];
+  if (parsedProducts) {
+    Product.list = [... parsedProducts];
+  }
+  else {
+    // eslint-disable-next-line no-unused-vars
+    let bag = new Product('bag', 'a droid suitcase');
+    // eslint-disable-next-line no-unused-vars
+    let banana = new Product('banana', 'a banana slicer');
+    // eslint-disable-next-line no-unused-vars
+    let bathroom = new Product('bathroom', 'a toilet-side tablet');
+    // eslint-disable-next-line no-unused-vars
+    let boots = new Product('boots','a pair of toeless waders');
+    // eslint-disable-next-line no-unused-vars
+    let breakfast = new Product('breakfast', 'a kitchen multi-tool');
+    // eslint-disable-next-line no-unused-vars
+    let bubblegum = new Product('bubblegum', 'a pack of meatball bubblegum');
+    // eslint-disable-next-line no-unused-vars
+    let chair = new Product('chair', 'an uncomfortable chair');
+    // eslint-disable-next-line no-unused-vars
+    let cthulhu = new Product('cthulhu', 'a cthulhu action figure');
+    // eslint-disable-next-line no-unused-vars
+    let dogDuck = new Product('dog-duck', 'a duck-billed dog muzzle');
+    // eslint-disable-next-line no-unused-vars
+    let dragon = new Product('dragon', 'a tin of dragon meat');
+    // eslint-disable-next-line no-unused-vars
+    let pen = new Product('pen', 'a multifunction writing/eating set');
+    // eslint-disable-next-line no-unused-vars
+    let petSweep = new Product('pet-sweep', 'a pack of pet dusting boots');
+    // eslint-disable-next-line no-unused-vars
+    let scissors = new Product('scissors', 'a pair of pizza shears');
+    // eslint-disable-next-line no-unused-vars
+    let shark = new Product('shark', 'a shark sleeping bag');
+    // eslint-disable-next-line no-unused-vars
+    let sweep = new Product('sweep', 'a child labor device', 'png');
+    // eslint-disable-next-line no-unused-vars
+    let tauntaun = new Product('tauntaun', 'a moist, smelly sleeping bag');
+    // eslint-disable-next-line no-unused-vars
+    let unicorn = new Product('unicorn', 'a tin of unicorn meat');
+    // eslint-disable-next-line no-unused-vars
+    let waterCan = new Product('water-can', 'a self-watering can');
+    // eslint-disable-next-line no-unused-vars
+    let wineGlass = new Product('wine-glass', 'a zero-g wine glass');
+  }
+}
 //#endregion
+
+//#region Runtime Code
 
 chartElem.style.display='none';
 let userVoteCount = 25;
 const numToRender = 3;
 let prevProducts = [];
+let productsJSON;
+let parsedProducts;
 
+retrieveResults();
+constructProducts();
 renderProducts(Product.list);
 
-//#region Global Functions
+//#endregion
+
+//#region Misc Global Functions
 
 function createElement(tag, parent) {
   const elem = document.createElement(tag);
@@ -138,6 +153,7 @@ function handleVote(event){
 function renderResults(){
   fillFallbackData();
   renderChart();
+  storeResults();
 }
 
 function fillFallbackData() {
@@ -252,7 +268,20 @@ function renderChart(){
 
 //#endregion
 
-//#region EventListeners
+//#region Local Storage Functions
+
+function storeResults() {
+  productsJSON = JSON.stringify(Product.list);
+  localStorage.setItem('products', productsJSON);
+}
+
+function retrieveResults() {
+  parsedProducts = JSON.parse(localStorage.getItem('products'));
+}
+
+//#endregion
+
+//#region Event Listeners
 
 productsSection.addEventListener('click', handleVote);
 
