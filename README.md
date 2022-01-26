@@ -6,7 +6,7 @@ The purpose of this project is to demonstrate fundamental software development c
 ### Author: Micha Davis
 
 ### Links and Resources
-* [public repo](https://github.com/Micha-L-Davis/cookie-stand.git)
+* [public repo](https://github.com/Micha-L-Davis/bus-mall.git)
 * [chart.js library](https://cdnjs.com/libraries/Chart.js)
 * [Mozilla MDN Web Docs](https://developer.mozilla.org/en/docs/Web/JavaScript/Guide)
 
